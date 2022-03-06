@@ -1,6 +1,6 @@
 'use strict'
 
-var blockRegex = /^(address|blockquote|body|center|dir|div|dl|fieldset|form|h[1-6]|hr|isindex|menu|noframes|noscript|ol|p|pre|table|ul|dd|dt|frameset|li|tbody|td|tfoot|th|thead|tr|html)$/i
+const blockRegex = /^(address|blockquote|body|center|dir|div|dl|fieldset|form|h[1-6]|hr|isindex|menu|noframes|noscript|ol|p|pre|table|ul|dd|dt|frameset|li|tbody|td|tfoot|th|thead|tr|html)$/i
 
 function isBlockLevel(name) {
   return blockRegex.test(name)
@@ -32,13 +32,13 @@ module.exports = {
   install: function(Vue, options) {
     options = options || {}
     options.getComputedName = options.getComputedName || function(vm, funcName) {
-      var withoutPrefix = funcName.replace(/^(fetch|get|load)/, '')
+      const withoutPrefix = funcName.replace(/^(fetch|get|load)/, '')
       return withoutPrefix.slice(0, 1).toLowerCase() + withoutPrefix.slice(1)
     }
 
     function wrapMethod(func, vm, funcName) {
       function wrapped() {
-        var args = [].slice.call(arguments)
+        const args = [].slice.call(arguments)
 
         vm[funcName].isCalled = true
         vm[funcName].isPending = true
@@ -50,14 +50,14 @@ module.exports = {
         vm[funcName].rejectedWith = null
 
         try {
-          var result = func.apply(vm, args)
+          const result = func.apply(vm, args)
           if (result && result.then) {
             vm[funcName].promise = result.then(function(res) {
               vm[funcName].isPending = false
               vm[funcName].isResolved = true
               vm[funcName].resolvedWith = res
 
-              var empty = isEmpty(res)
+              const empty = isEmpty(res)
               vm[funcName].resolvedWithEmpty = empty
               vm[funcName].resolvedWithSomething = !empty
 
@@ -82,7 +82,7 @@ module.exports = {
               vm[funcName].isResolved = true
               vm[funcName].resolvedWith = result
 
-              var empty = isEmpty(result)
+              const empty = isEmpty(result)
               vm[funcName].resolvedWithEmpty = empty
               vm[funcName].resolvedWithSomething = !empty
 
@@ -125,10 +125,10 @@ module.exports = {
           return this.$slots.default[0]
         }
 
-        var isAnyBlock = this.$slots.default.some(function(vNode) {
+        const isAnyBlock = this.$slots.default.some(function(vNode) {
           return isBlockLevel(vNode.tag)
         })
-        var baseElement = isAnyBlock ? 'div' : 'span'
+        const baseElement = isAnyBlock ? 'div' : 'span'
         return h(baseElement, this.$slots.default)
       },
       data: function() {
@@ -148,7 +148,7 @@ module.exports = {
       },
       methods: {
         catchError: function() {
-          var self = this
+          const self = this
           this.error = null
 
           this.method.promise.catch(function(err) {
@@ -162,15 +162,15 @@ module.exports = {
 
     Vue.mixin({
       beforeCreate: function() {
-        var self = this
-        var asyncMethods = this.$options.asyncMethods || {}
+        const self = this
+        const asyncMethods = this.$options.asyncMethods || {}
 
-        for (var key in asyncMethods) {
-          var func = wrapMethod(asyncMethods[key], this, key)
+        for (const key in asyncMethods) {
+          const func = wrapMethod(asyncMethods[key], this, key)
 
           Vue.util.defineReactive(this, key, func)
 
-          var extra = {
+          const extra = {
             promise: null,
             isCalled: false,
             isPending: false,
@@ -183,14 +183,14 @@ module.exports = {
             handleErrorInView: false
           }
 
-          for (var prop in extra) {
+          for (const prop in extra) {
             Vue.util.defineReactive(func, prop, extra[prop])
           }
 
           // add computed
           if (options.createComputed) {
             this.$options.computed = this.$options.computed || {}
-            var computedName = options.getComputedName(this, key)
+            const computedName = options.getComputedName(this, key)
 
             if (!computedName || !computedName.length) {
               throw new Error('Computed name for method ' + key + ' is empty, return a non zero length string')

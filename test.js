@@ -1,10 +1,10 @@
 /* global describe, it, beforeEach */
-var expect = require('chai').expect
-var sinon = require('sinon')
-var decache = require('decache')
-var asyncMethods = require('./index')
-var resolvePromise
-var rejectPromise
+const expect = require('chai').expect
+const sinon = require('sinon')
+const decache = require('decache')
+const asyncMethods = require('./index')
+let resolvePromise
+let rejectPromise
 
 function fetch() {
   return new Promise(function(resolve, reject) {
@@ -14,9 +14,9 @@ function fetch() {
 }
 
 describe('vue-async-methods custom options', function() {
-  var vm
-  var onError
-  var Vue
+  let vm
+  let onError
+  let Vue
   beforeEach(function() {
     decache('vue')
     Vue = require('vue')
@@ -50,9 +50,9 @@ describe('vue-async-methods custom options', function() {
   })
 
   describe('direct call', function() {
-    var article = {}
+    const article = {}
     beforeEach(function() {
-      var call = vm.fetchArticle()
+      const call = vm.fetchArticle()
       resolvePromise(article)
       return call
     })
@@ -63,9 +63,9 @@ describe('vue-async-methods custom options', function() {
   })
 
   describe('when it succeds', function() {
-    var article = {}
+    const article = {}
     beforeEach(function() {
-      var call = vm.fetchArticle()
+      const call = vm.fetchArticle()
       resolvePromise(article)
       return call
     })
@@ -76,9 +76,9 @@ describe('vue-async-methods custom options', function() {
   })
 
   describe('when it fail', function() {
-    var error = new Error('fail')
+    const error = new Error('fail')
     beforeEach(function() {
-      var call = vm.fetchArticle(1, 2, 3)
+      const call = vm.fetchArticle(1, 2, 3)
       rejectPromise(error)
       return call.catch(function () {})
     })
@@ -91,10 +91,10 @@ describe('vue-async-methods custom options', function() {
 })
 
 describe('vue-async-methods default options', function() {
-  var vm
+  let vm
   beforeEach(function() {
     decache('vue')
-    var Vue = require('vue')
+    const Vue = require('vue')
     Vue.use(asyncMethods)
     vm = new Vue({
       asyncMethods: {
@@ -116,7 +116,7 @@ describe('vue-async-methods default options', function() {
   })
 
   describe('after called', function() {
-    var call
+    let call
     beforeEach(function() {
       call = vm.fetch()
     })
@@ -134,7 +134,7 @@ describe('vue-async-methods default options', function() {
     })
 
     describe('when resolved with empty', function() {
-      var resolveResult = {}
+      const resolveResult = {}
       beforeEach(function() {
         resolvePromise(resolveResult)
         return call
@@ -154,7 +154,7 @@ describe('vue-async-methods default options', function() {
     })
 
     describe('when resolved with something', function() {
-      var resolveResult = {
+      const resolveResult = {
         foo: false
       }
       beforeEach(function() {
@@ -176,7 +176,7 @@ describe('vue-async-methods default options', function() {
     })
 
     describe('when resolved with empty array', function() {
-      var resolveResult = []
+      const resolveResult = []
       beforeEach(function() {
         resolvePromise(resolveResult)
         return call
@@ -196,7 +196,7 @@ describe('vue-async-methods default options', function() {
     })
 
     describe('when resolved with array', function() {
-      var resolveResult = [1]
+      const resolveResult = [1]
       beforeEach(function() {
         resolvePromise(resolveResult)
         return call
@@ -216,7 +216,7 @@ describe('vue-async-methods default options', function() {
     })
 
     describe('when rejected', function() {
-      var rejectResult = new Error('msg')
+      const rejectResult = new Error('msg')
       beforeEach(function() {
         rejectPromise(rejectResult)
         return call.catch(function () {}) // expect fail
